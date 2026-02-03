@@ -1,7 +1,7 @@
-// app/components/Navbar.tsx
 "use client";
 
 import dynamic from "next/dynamic";
+import { Menu } from "lucide-react";
 
 const ThemeToggle = dynamic(() => import("./ThemeToggle"), {
   ssr: false,
@@ -9,17 +9,34 @@ const ThemeToggle = dynamic(() => import("./ThemeToggle"), {
 });
 
 export default function Navbar() {
+  const navLinks = (
+    <>
+      <li><a>Home</a></li>
+      <li><a>About</a></li>
+      <li><a>Contact</a></li>
+    </>
+  );
+
   return (
-    <div className="navbar fixed top-0 w-full z-50 px-4 md:px-8 shadow-sm bg-base-100/80 backdrop-blur-md transition-all duration-300">
+    <div className="navbar fixed top-0 w-full z-50 px-4 md:px-8 backdrop-blur-md transition-all duration-300">
       <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden mr-2">
+            <Menu className="h-6 w-6" />
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+            {navLinks}
+          </ul>
+        </div>
+
         <a className="btn btn-ghost text-xl font-bold tracking-tight">QUICK RECORDS</a>
       </div>
 
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-4 font-medium">
-          <li><a>Home</a></li>
-          <li><a>About</a></li>
-          <li><a>Contact</a></li>
+          {navLinks}
         </ul>
       </div>
 
