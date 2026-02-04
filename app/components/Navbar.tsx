@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Menu } from "lucide-react";
+import Button from "./Button";
 
 const ThemeToggle = dynamic(() => import("./ThemeToggle"), {
   ssr: false,
@@ -42,7 +43,13 @@ export default function Navbar() {
 
       <div className="navbar-end flex items-center gap-4">
         <ThemeToggle />
-        <a className="btn btn-primary btn-sm md:btn-md rounded-lg">Login</a>
+        <Button 
+          href="/login" 
+          variant="primary" 
+          className="btn-sm md:btn-md rounded-lg"
+        >
+          Login
+        </Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Button from "./components/Button";
 import Navbar from "./components/Navbar";
 
 export default function Page() {
@@ -17,8 +18,13 @@ export default function Page() {
               designed to streamline your record-keeping workflow.
             </p>
             <div className="flex justify-center gap-4">
-              <button className="btn btn-primary px-8">Get Started</button>
-              <button className="btn btn-outline">Learn More</button>
+              <Button variant="primary" className="px-8">
+                Get Started
+              </Button>
+
+              <Button outline>
+                Learn More
+              </Button>
             </div>
           </div>
         </div>
