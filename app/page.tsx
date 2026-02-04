@@ -18,7 +18,7 @@ export default function Page() {
               designed to streamline your record-keeping workflow.
             </p>
             <div className="flex justify-center gap-4">
-              <Button variant="primary" className="px-8">
+              <Button variant="primary" href="/register" className="px-8">
                 Get Started
               </Button>
 
