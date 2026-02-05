@@ -1,4 +1,4 @@
-import { Providers } from "./providers";
+import { ThemeProviders } from "@/app/providers/ThemeProvider";
 import './globals.css';
 import { firaSansCondensed } from '@/app/ui/fonts';
 
@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${firaSansCondensed.className} antialiased`}>
-        <Providers>{children}</Providers>
+        <ThemeProviders>{children}</ThemeProviders>
       </body>
     </html>
   );
