@@ -1,10 +1,16 @@
 import Link from "next/link";
 import Button from "@/app/components/Button";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Home, Lock } from "lucide-react";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 p-4">
+    <div className="min-h-screen relative flex items-center justify-center bg-base-200 p-4">
+      <Link
+          href="/"
+          className="absolute top-6 left-6 inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200"
+        >
+        <Home className="w-5 h-5" /> Back Home
+      </Link>
       <div className="card w-full max-w-sm shadow-2xl bg-base-100">
         <div className="card-body">
           
@@ -39,7 +45,7 @@ export default function RegisterPage() {
               <label className="label">
                 <span className="label-text font-medium">Full Name</span>
               </label>
-              <label className="input input-bordered flex items-center gap-2">
+              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
                 <User className="w-4 h-4 opacity-70" />
                 <input type="text" placeholder="John Doe" className="grow" />
               </label>
@@ -49,7 +55,7 @@ export default function RegisterPage() {
               <label className="label">
                 <span className="label-text font-medium">Email</span>
               </label>
-              <label className="input input-bordered flex items-center gap-2">
+              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
                 <Mail className="w-4 h-4 opacity-70" />
                 <input type="email" placeholder="name@example.com" className="grow" />
               </label>
@@ -59,7 +65,7 @@ export default function RegisterPage() {
               <label className="label">
                 <span className="label-text font-medium">Password</span>
               </label>
-              <label className="input input-bordered flex items-center gap-2">
+              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
                 <Lock className="w-4 h-4 opacity-70" />
                 <input type="password" placeholder="Create a password" className="grow" />
               </label>
