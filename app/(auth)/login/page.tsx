@@ -1,8 +1,49 @@
+"use client"
+
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { Mail, Lock, Home, Loader2 } from "lucide-react";
+
 import Button from "@/app/components/Button";
-import { Mail, Lock, Home } from "lucide-react";
+import Input from "@/app/components/Input";
+import { LoginSchema, LoginFormValues } from "@/app/lib/schemas";
+
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(LoginSchema),
+  });
+
+  async function onSubmit(data: LoginFormValues) {
+    try {
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error("Invalid email or password");
+        return;
+      }
+
+      toast.success("Welcome back!");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      toast.error(`Login failed. Please try again. ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
   return (
     <div className="min-h-screen relative flex items-center justify-center bg-base-200 p-4">
         <Link
@@ -39,35 +80,50 @@ export default function LoginPage() {
 
           <div className="divider">OR</div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
             
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Email</span>
-              </label>
-              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
-                <Mail className="w-4 h-4 opacity-70" />
-                <input type="email" placeholder="name@example.com" className="grow" />
-              </label>
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              placeholder="name@example.com"
+              icon={<Mail className="w-4 h-4" />}
+              error={errors.email}
+              {...register("email")}
+            />
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Password</span>
-              </label>
-              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
-                <Lock className="w-4 h-4 opacity-70" />
-                <input type="password" placeholder="••••••••" className="grow" />
-              </label>
-              <label className="label">
-                <Link href="#" className="label-text-alt link link-hover text-primary">
+            <div>
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                icon={<Lock className="w-4 h-4" />}
+                error={errors.password}
+                {...register("password")}
+              />
+              <label className="label justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="label-text-alt link link-hover text-primary"
+                >
                   Forgot password?
                 </Link>
               </label>
             </div>
 
-            <Button variant="primary" className="w-full mt-4">
-              Sign In
+            <Button 
+              variant="primary"
+              className="w-full mt-4"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Signing In...
+                </>
+              ): (
+                "Sign In"
+              )}
             </Button>
           </form>
 
