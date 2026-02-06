@@ -1,8 +1,49 @@
+"use client"
+
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast"; 
+import { User, Mail, Home, Lock, Loader2 } from "lucide-react";
+
 import Button from "@/app/components/Button";
-import { User, Mail, Home, Lock } from "lucide-react";
+import Input from "@/app/components/Input";
+import { RegisterSchema, RegisterFormValues } from "@/app/lib/schemas";
+import { registerUser } from "@/app/actions/register";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(RegisterSchema),
+    mode: "onBlur",
+  });
+
+  async function onSubmit(data: RegisterFormValues) {
+    const formData = new FormData();
+    formData.append("name", data.fullName);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+
+    try {
+      const result = await registerUser(formData);
+
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success("Account created successfully! Login to continue");
+      router.push("/login");
+    } catch (error) {
+      toast.error(`Something went wrong. Please try again. ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
   return (
     <div className="min-h-screen relative flex items-center justify-center bg-base-200 p-4">
       <Link
@@ -19,7 +60,7 @@ export default function RegisterPage() {
             <p className="text-base-content/60">Get started with Quick Records</p>
           </div>
 
-           <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4">
             <button className="btn btn-outline flex-1 gap-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -39,40 +80,49 @@ export default function RegisterPage() {
 
           <div className="divider">OR</div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
             
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Full Name</span>
-              </label>
-              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
-                <User className="w-4 h-4 opacity-70" />
-                <input type="text" placeholder="John Doe" className="grow" />
-              </label>
-            </div>
+            <Input
+              label="Full Name"
+              type="text"
+              placeholder="John Doe"
+              icon={<User className="w-4 h-4" />}
+              error={errors.fullName}
+              {...register("fullName")}
+            />
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Email</span>
-              </label>
-              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
-                <Mail className="w-4 h-4 opacity-70" />
-                <input type="email" placeholder="name@example.com" className="grow" />
-              </label>
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              placeholder="name@example.com"
+              icon={<Mail className="w-4 h-4" />}
+              error={errors.email}
+              {...register("email")}
+            />
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Password</span>
-              </label>
-              <label className="input input-bordered focus-within:input-primary flex items-center gap-2">
-                <Lock className="w-4 h-4 opacity-70" />
-                <input type="password" placeholder="Create a password" className="grow" />
-              </label>
-            </div>
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Create a password"
+              icon={<Lock className="w-4 h-4" />}
+              error={errors.password}
+              {...register("password")}
+            />
 
-            <Button variant="primary" className="w-full mt-4">
-              Create Account
+            <Button 
+              variant="primary"
+              className="w-full mt-6"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Creating Account...
+                </>
+              ) : (
+              "Create Account"
+              )}
             </Button>
           </form>
 
