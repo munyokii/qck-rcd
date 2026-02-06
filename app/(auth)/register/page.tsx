@@ -38,7 +38,7 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.success("Account created successfully!");
+      toast.success("Account created successfully! Login to continue");
       router.push("/login");
     } catch (error) {
       toast.error(`Something went wrong. Please try again. ${error instanceof Error ? error.message : 'Unknown error'}`);
