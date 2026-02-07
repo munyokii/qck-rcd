@@ -10,7 +10,7 @@ import { Mail, Lock, Home, Loader2 } from "lucide-react";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
-import { LoginSchema, LoginFormValues } from "@/app/lib/schemas";
+import { LoginSchema, LoginFormValues } from "@/app/lib/schemas/user";
 
 
 export default function LoginPage() {

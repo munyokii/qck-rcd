@@ -9,7 +9,7 @@ import { User, Mail, Home, Lock, Loader2 } from "lucide-react";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
-import { RegisterSchema, RegisterFormValues } from "@/app/lib/schemas";
+import { RegisterSchema, RegisterFormValues } from "@/app/lib/schemas/user";
 import { registerUser } from "@/app/actions/register";
 
 export default function RegisterPage() {
