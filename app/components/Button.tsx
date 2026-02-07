@@ -19,7 +19,6 @@ export default function Button({
   ...props
 }: ButtonProps) {
   
-  // 1. Map variants to full strings so Tailwind sees them
   const variantClasses: Record<string, string> = {
     primary: "btn-primary",
     secondary: "btn-secondary",
@@ -32,7 +31,6 @@ export default function Button({
     warning: "btn-warning",
   };
 
-  // 2. Map sizes to full strings
   const sizeClasses: Record<string, string> = {
     xs: "btn-xs",
     sm: "btn-sm",
@@ -42,7 +40,6 @@ export default function Button({
     block: "btn-block",
   };
 
-  // 3. Construct the class string safely
   const classes = `btn ${variant ? variantClasses[variant] : ""} ${outline ? "btn-outline" : ""} ${size ? sizeClasses[size] : ""} ${className}`;
 
   if (href) {

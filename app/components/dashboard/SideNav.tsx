@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { 
-  LayoutDashboard, Users, User, Box, Bell, FileText, Receipt, 
+  LayoutDashboard, Users, User, Box, Bell, Building2, FileText, Receipt, 
   CreditCard, BarChart3, LogOut, Menu, X,
 } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
+import BusinessProfileModal from "./BusinessProfileModal";
 
 const navLinks = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -24,6 +25,8 @@ export default function SideNav() {
   const pathname = usePathname();
   const modalRef = useRef<HTMLDialogElement>(null);
 
+  const profileModalRef = useRef<HTMLDialogElement>(null);
+
   const isActive = (path: string) => pathname === path;
   const closeMobileMenu = () => modalRef.current?.close();
 
@@ -38,10 +41,16 @@ export default function SideNav() {
             <span className="text-xl font-bold text-base-content">QuickRecords</span>
           </div>
           <div className="px-4 mb-4">
-            <div className="bg-base-200 p-4 rounded-xl border border-base-300">
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Company Profile</p>
+            <button 
+              onClick={() => profileModalRef.current?.showModal()} 
+              className="w-full text-left bg-base-200 p-4 rounded-xl border border-base-300 hover:border-primary/50 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                 <p className="text-xs font-bold text-primary uppercase tracking-wider">Company Profile</p>
+                 <Building2 className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <p className="font-semibold text-base-content truncate">Quick Records Admin</p>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -136,6 +145,8 @@ export default function SideNav() {
           <span className="dock-label">More</span>
         </button>
       </div>
+
+      <BusinessProfileModal modalRef={profileModalRef} />
 
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box bg-base-100 p-0 rounded-t-2xl">
