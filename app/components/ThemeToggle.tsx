@@ -14,9 +14,9 @@ export default function ThemeToggle() {
         checked={theme === "halloween"} 
       />
 
-      <Sun className="swap-on h-6 w-6 fill-current" />
+      <Sun className="swap-on h-6 w-6" />
 
-      <Moon className="swap-off h-6 w-6 fill-current" />
+      <Moon className="swap-off h-6 w-6" />
     </label>
   );
 }
