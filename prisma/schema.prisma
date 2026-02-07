@@ -18,6 +18,24 @@ model User {
   fullName String
   email String @unique
   password String
+  company Company?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id String @id @default(cuid())
+  name String
+  kraPin String?
+  phone String
+  email String
+  website String?
+  physicalAddress String
+  logoUrl String?
+
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
