@@ -16,4 +16,4 @@ You can check out the live demo of Quick Records at [https://qck-rcd.vercel.app/
 ## Technologies Used
 - **Frontend**: Next.js, Tailwind CSS
 - **Database**: PostgreSQL(via Prisma ORM)
-- **Authentication**: JWT (JSON Web Tokens)
+- **Authentication**: NextAuth, JWT (JSON Web Tokens)
