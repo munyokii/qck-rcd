@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { 
   LayoutDashboard, Users, User, Box, Bell, FileText, Receipt, 
   CreditCard, BarChart3, LogOut, Menu, X,
@@ -25,6 +26,8 @@ export default function SideNav() {
 
   const isActive = (path: string) => pathname === path;
   const closeMobileMenu = () => modalRef.current?.close();
+
+  const handleLogout = () => signOut({ callbackUrl: "/login" });
 
   return (
     <>
@@ -96,6 +99,7 @@ export default function SideNav() {
 
             <div className="tooltip tooltip-top" data-tip="Logout">
               <button 
+                onClick={handleLogout}
                 className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-error/10 text-base-content/70 hover:text-error transition-all"
               >
                 <LogOut className="w-5 h-5" />
@@ -176,7 +180,9 @@ export default function SideNav() {
                 <Bell className="w-6 h-6" />
               </button>
 
-              <button className="flex items-center justify-center p-4 bg-error/10 text-error rounded-2xl active:scale-95 transition-transform tooltip tooltip-top" data-tip="Logout">
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center p-4 bg-error/10 text-error rounded-2xl active:scale-95 transition-transform tooltip tooltip-top" data-tip="Logout">
                 <LogOut className="w-6 h-6" />
               </button>
             </div>
