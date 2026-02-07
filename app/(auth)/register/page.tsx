@@ -45,11 +45,11 @@ export default function RegisterPage() {
     }
   }
   return (
-    <div className="min-h-screen relative flex items-center justify-center bg-base-200 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-base-200 p-4">
       <Link
-          href="/"
-          className="absolute top-6 left-6 inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200"
-        >
+        href="/"
+        className="mb-8 lg:absolute lg:top-6 lg:left-6 inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200"
+      >
         <Home className="w-5 h-5" /> Back Home
       </Link>
       <div className="card w-full max-w-sm shadow-2xl bg-base-100">
