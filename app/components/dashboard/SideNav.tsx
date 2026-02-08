@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { 
-  LayoutDashboard, Users, User, Box, Bell, FileText, Receipt, 
+  LayoutDashboard, Users, User, Box, Bell, Building2, FileText, Receipt, 
   CreditCard, BarChart3, LogOut, Menu, X,
 } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
+import BusinessProfileModal from "./BusinessProfileModal";
 
 const navLinks = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,23 +25,76 @@ const navLinks = [
 export default function SideNav() {
   const pathname = usePathname();
   const modalRef = useRef<HTMLDialogElement>(null);
+  const profileModalRef = useRef<HTMLDialogElement>(null);
+
+  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
+  const [isLoadingCompany, setIsLoadingCompany] = useState(true);
 
   const isActive = (path: string) => pathname === path;
   const closeMobileMenu = () => modalRef.current?.close();
+  const handleLogout = () => signOut({ callbackUrl: "/login" });
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const res = await fetch("/api/company");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.company) {
+            setCompanyName(data.company.name);
+            setCompanyLogo(data.company.logoUrl);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch company data", error);
+      } finally {
+        setIsLoadingCompany(false);
+      }
+    };
+
+    fetchCompanyData();
+  }, []);
 
   return (
     <>
       <aside className="hidden lg:flex w-64 flex-col bg-base-100 border-r border-base-300 h-full fixed left-0 top-0 z-20">
         <div className="flex-none">
-          <div className="p-6 flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold">QR</div>
-            <span className="text-xl font-bold text-base-content">QuickRecords</span>
+          <div className="p-6 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-content font-bold overflow-hidden relative shrink-0">
+              {companyLogo ? (
+                 <Image 
+                   src={companyLogo} 
+                   alt="Company Logo" 
+                   fill 
+                   className="object-cover"
+                 />
+              ) : (
+                 <span>{companyName ? companyName.substring(0, 2).toUpperCase() : "QR"}</span>
+              )}
+            </div>
+            
+            <span className="text-lg font-bold text-base-content truncate">
+              {companyName || "QuickRecords"}
+            </span>
           </div>
           <div className="px-4 mb-4">
-            <div className="bg-base-200 p-4 rounded-xl border border-base-300">
-              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Company Profile</p>
-              <p className="font-semibold text-base-content truncate">Quick Records Admin</p>
-            </div>
+            <button 
+              onClick={() => profileModalRef.current?.showModal()} 
+              className="w-full text-left bg-base-200 p-4 rounded-xl border border-base-300 hover:border-primary/50 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                 <p className="text-xs font-bold text-primary uppercase tracking-wider">Company Profile</p>
+                 <Building2 className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+              <p className="font-semibold text-base-content truncate">
+                {isLoadingCompany ? (
+                    <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                    companyName || "Setup Company"
+                )}
+              </p>
+            </button>
           </div>
         </div>
 
@@ -96,6 +152,7 @@ export default function SideNav() {
 
             <div className="tooltip tooltip-top" data-tip="Logout">
               <button 
+                onClick={handleLogout}
                 className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-error/10 text-base-content/70 hover:text-error transition-all"
               >
                 <LogOut className="w-5 h-5" />
@@ -108,8 +165,22 @@ export default function SideNav() {
 
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-300 z-30 flex items-center px-4 justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold text-xs">QR</div>
-          <span className="text-lg font-bold text-base-content">QuickRecords</span>
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-content font-bold overflow-hidden relative shrink-0">
+            {companyLogo ? (
+                <Image 
+                  src={companyLogo} 
+                  alt="Company Logo" 
+                  fill 
+                  className="object-cover"
+                />
+            ) : (
+                <span>{companyName ? companyName.substring(0, 2).toUpperCase() : "QR"}</span>
+            )}
+          </div>
+            
+          <span className="text-lg font-bold text-base-content truncate">
+            {companyName || "QuickRecords"}
+          </span>
         </div>
       </div>
 
@@ -132,6 +203,8 @@ export default function SideNav() {
           <span className="dock-label">More</span>
         </button>
       </div>
+
+      <BusinessProfileModal modalRef={profileModalRef} />
 
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box bg-base-100 p-0 rounded-t-2xl">
@@ -176,7 +249,9 @@ export default function SideNav() {
                 <Bell className="w-6 h-6" />
               </button>
 
-              <button className="flex items-center justify-center p-4 bg-error/10 text-error rounded-2xl active:scale-95 transition-transform tooltip tooltip-top" data-tip="Logout">
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center p-4 bg-error/10 text-error rounded-2xl active:scale-95 transition-transform tooltip tooltip-top" data-tip="Logout">
                 <LogOut className="w-6 h-6" />
               </button>
             </div>
