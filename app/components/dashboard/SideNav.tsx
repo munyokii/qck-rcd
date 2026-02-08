@@ -165,8 +165,22 @@ export default function SideNav() {
 
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-base-100 border-b border-base-300 z-30 flex items-center px-4 justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold text-xs">QR</div>
-          <span className="text-lg font-bold text-base-content">QuickRecords</span>
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-content font-bold overflow-hidden relative shrink-0">
+            {companyLogo ? (
+                <Image 
+                  src={companyLogo} 
+                  alt="Company Logo" 
+                  fill 
+                  className="object-cover"
+                />
+            ) : (
+                <span>{companyName ? companyName.substring(0, 2).toUpperCase() : "QR"}</span>
+            )}
+          </div>
+            
+          <span className="text-lg font-bold text-base-content truncate">
+            {companyName || "QuickRecords"}
+          </span>
         </div>
       </div>
 
