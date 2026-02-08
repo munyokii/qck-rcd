@@ -155,7 +155,6 @@ export default function BusinessProfileModal({ modalRef }: ModalProps) {
           
             <div className="relative w-full border-2 border-dashed border-primary/30 bg-primary/5 rounded-3xl p-8 flex flex-col items-center justify-center gap-3 text-center cursor-pointer hover:bg-primary/10 hover:border-primary transition-all group overflow-hidden">
               
-              {/* File Input */}
               <input 
                 type="file" 
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" 
@@ -163,7 +162,6 @@ export default function BusinessProfileModal({ modalRef }: ModalProps) {
                 onChange={handleLogoChange}
               />
 
-              {/* Preview Layer */}
               {logoPreview ? (
                   <div className="absolute inset-0 z-10 bg-base-100 flex items-center justify-center">
                       <Image 

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { 
@@ -24,21 +25,58 @@ const navLinks = [
 export default function SideNav() {
   const pathname = usePathname();
   const modalRef = useRef<HTMLDialogElement>(null);
-
   const profileModalRef = useRef<HTMLDialogElement>(null);
+
+  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
+  const [isLoadingCompany, setIsLoadingCompany] = useState(true);
 
   const isActive = (path: string) => pathname === path;
   const closeMobileMenu = () => modalRef.current?.close();
-
   const handleLogout = () => signOut({ callbackUrl: "/login" });
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const res = await fetch("/api/company");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.company) {
+            setCompanyName(data.company.name);
+            setCompanyLogo(data.company.logoUrl);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch company data", error);
+      } finally {
+        setIsLoadingCompany(false);
+      }
+    };
+
+    fetchCompanyData();
+  }, []);
 
   return (
     <>
       <aside className="hidden lg:flex w-64 flex-col bg-base-100 border-r border-base-300 h-full fixed left-0 top-0 z-20">
         <div className="flex-none">
-          <div className="p-6 flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold">QR</div>
-            <span className="text-xl font-bold text-base-content">QuickRecords</span>
+          <div className="p-6 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-content font-bold overflow-hidden relative shrink-0">
+              {companyLogo ? (
+                 <Image 
+                   src={companyLogo} 
+                   alt="Company Logo" 
+                   fill 
+                   className="object-cover"
+                 />
+              ) : (
+                 <span>{companyName ? companyName.substring(0, 2).toUpperCase() : "QR"}</span>
+              )}
+            </div>
+            
+            <span className="text-lg font-bold text-base-content truncate">
+              {companyName || "QuickRecords"}
+            </span>
           </div>
           <div className="px-4 mb-4">
             <button 
@@ -49,7 +87,13 @@ export default function SideNav() {
                  <p className="text-xs font-bold text-primary uppercase tracking-wider">Company Profile</p>
                  <Building2 className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <p className="font-semibold text-base-content truncate">Quick Records Admin</p>
+              <p className="font-semibold text-base-content truncate">
+                {isLoadingCompany ? (
+                    <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                    companyName || "Setup Company"
+                )}
+              </p>
             </button>
           </div>
         </div>
