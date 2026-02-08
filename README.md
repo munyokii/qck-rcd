@@ -4,7 +4,7 @@ Welcome to Quick Records, your most secure platform to manage your shop inventor
 
 ## Live Demo
 
-You can check out the live demo of Quick Records at [https://qck-rcd.vercel.app/](https://qck-rcd.vercel.app/).
+You can check out the live demo of Quick Records at [https://qck-rcd.vercel.app/](https://qck-rcd.vercel.app).
 
 ## Features
 
